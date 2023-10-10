@@ -150,7 +150,6 @@
     #output
         margin: 0 auto
         width: fit-content
-        height: 5rem
         max-width: 100%
 
     #alphabet
