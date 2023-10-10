@@ -24,6 +24,10 @@
     }
 </script>
 
+<svelte:head>
+    <title>崩坏三（第二部）的火星文</title>
+</svelte:head>
+
 <div id="wrapper">
     <div style="height: 30vh"/>
 
