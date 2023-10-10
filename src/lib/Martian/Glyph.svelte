@@ -18,15 +18,16 @@
     afterUpdate(() => {
         let syllableUpper = syllable.toUpperCase();
 
-        columns = [];
+        const newColumns = [];
         if (charNum > 0) {
             for (let i = 0; i <= Math.floor(charNum / 2) - 1; i++) {
-                columns.push({upper: syllableUpper[2*i], lower: syllableUpper[2*i+1]});
+                newColumns.push({upper: syllableUpper[2*i], lower: syllableUpper[2*i+1]});
             }
             if (charNum % 2 == 1) {
-                columns.push({upper: syllableUpper[charNum-1], lower: "/"})
+                newColumns.push({upper: syllableUpper[charNum-1], lower: "/"})
             }
         }
+        columns = newColumns;
 
         switch (tone) {
             case Tone.Flat:       rotation = 0; break;
@@ -35,16 +36,19 @@
             case Tone.Falling:    rotation = 270; break;
             case Tone.Neutral:    rotation = 0; break;
         }
+
     });
 </script>
 
 <div class="glyph" style:height>
+    {#key columns}
     {#each columns as column}
     <div class="column">
         <div><Letter letter={column.upper} {tone} {color} {weight} /></div>
         <div><Letter letter={column.lower} {tone} {color} {weight} /></div>
     </div>
     {/each}
+    {/key}
 </div>
 
 <style lang="sass">
@@ -61,7 +65,6 @@
             aspect-ratio: 4 / 9
 
         & > div
-            //outline: 1px solid #f004
             position: absolute
             height: calc(100% * 5 / 9)
             aspect-ratio: 1
