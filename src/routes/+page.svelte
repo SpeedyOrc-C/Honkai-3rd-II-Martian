@@ -7,7 +7,10 @@
     import Glyph from "$lib/Martian/Glyph.svelte";
     import MartianSubtitle from "./MartianSubtitle.svelte";
 
+    import { pinyin } from "pinyin";
+
     const placeholder = "di4 qiu2 ni3 hao3";
+    const placeholder_chinese = "地球你好";
     const letterGroups = [
         ["A", "O", "E", "I", "U", "Y", "W"],
         ["B", "P", "M", "F", "D", "T", "N", "L"],
@@ -15,11 +18,18 @@
         ["Z", "C", "S", "R", "ZH", "CH", "SH"],
     ];
     let input = "";
+    let input_chinese = "";
     let valid = true;
     let inputReal = placeholder;
     let slowUpdate = slowdown(update, 1000);
+    let slowUpdateChinese = slowdown(updateChinese, 1000);
 
     function update() {
+        input_chinese = "";  // when input in pinyin, clear chinese input
+        inputReal = input.length > 0 ? input : placeholder;
+    }
+    function updateChinese() {
+        input = pinyin(input_chinese, {style: pinyin.STYLE_TONE2}).join(" ");
         inputReal = input.length > 0 ? input : placeholder;
     }
 </script>
@@ -35,6 +45,9 @@
         文字转换
     </MartianSubtitle>
 
+    <input id="chinese-input" type="text" spellcheck="false"
+           class:valid placeholder="{placeholder_chinese}" 
+           bind:value={input_chinese} on:keyup={slowUpdateChinese}>
     <input id="pinyin-input" type="text" spellcheck="false"
            class:valid {placeholder} bind:value={input} on:keyup={slowUpdate}>
 
@@ -133,7 +146,7 @@
         font-size: 1.2rem
         font-family: sans-serif
 
-    #pinyin-input
+    #pinyin-input, #chinese-input
         display: block
         width: 100%
         max-width: 50rem
@@ -146,6 +159,9 @@
         background: #8f4014
         &.valid
             background: unset
+
+    #chinese-input
+        margin-bottom: 1rem
 
     #output
         margin: 0 auto
