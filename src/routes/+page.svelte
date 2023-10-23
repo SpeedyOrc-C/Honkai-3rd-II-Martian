@@ -9,6 +9,11 @@
 
     import { pinyin } from "pinyin";
 
+//     console.log(pinyin("我喜欢你", {
+//   segment: "nodejieba",         // 启用分词
+//   group: true,                  // 启用词组
+// }));
+
     const placeholder = "di4 qiu2 ni3 hao3";
     const placeholder_chinese = "地球你好";
     const letterGroups = [
@@ -29,7 +34,14 @@
         inputReal = input.length > 0 ? input : placeholder;
     }
     function updateChinese() {
-        input = pinyin(input_chinese, {style: pinyin.STYLE_TONE2}).join(" ");
+        let p_res = pinyin(input_chinese, {
+            style: pinyin.STYLE_TONE2,
+            segment: "segmentit",
+            group: true,
+            heteronym: true,
+        });
+        let str = p_res.map((syllable) => syllable[0]).join("");
+        input = str.replace(/(\d)(?=[a-z])/gi, "$1 ");
         inputReal = input.length > 0 ? input : placeholder;
     }
 </script>
