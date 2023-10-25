@@ -6,43 +6,37 @@
     import {Tones} from "$lib/Pinyin";
     import Glyph from "$lib/Martian/Glyph.svelte";
     import MartianSubtitle from "./MartianSubtitle.svelte";
-
-    import { pinyin } from "pinyin";
+    import {pinyin} from "pinyin";
 
 //     console.log(pinyin("我喜欢你", {
 //   segment: "nodejieba",         // 启用分词
 //   group: true,                  // 启用词组
 // }));
 
-    const placeholder = "di4 qiu2 ni3 hao3";
-    const placeholder_chinese = "地球你好";
     const letterGroups = [
         ["A", "O", "E", "I", "U", "Y", "W"],
         ["B", "P", "M", "F", "D", "T", "N", "L"],
         ["G", "K", "H", "J", "Q", "X"],
         ["Z", "C", "S", "R", "ZH", "CH", "SH"],
     ];
-    let input = "";
-    let input_chinese = "";
-    let valid = true;
-    let inputReal = placeholder;
-    let slowUpdate = slowdown(update, 1000);
-    let slowUpdateChinese = slowdown(updateChinese, 1000);
+    const defaultPinyin = "di4 qiu2 ni3 hao3";
+    const defaultChinese = "地球你好";
+    const slowUpdatePinyin = slowdown(updatePinyin, 1000);
+    const slowUpdateChinese = slowdown(updateChinese, 1000);
 
-    function update() {
-        input_chinese = "";  // when input in pinyin, clear chinese input
-        inputReal = input.length > 0 ? input : placeholder;
+    let pinyinToBeConverted = defaultPinyin;
+    let inputPinyin = "";
+    let inputChinese = "";
+    let valid = true;
+
+    function updatePinyin() {
+        inputChinese = "";
+        pinyinToBeConverted = inputPinyin.length > 0 ? inputPinyin : defaultPinyin;
     }
+
     function updateChinese() {
-        let p_res = pinyin(input_chinese, {
-            style: pinyin.STYLE_TONE2,
-            segment: "segmentit",
-            group: true,
-            heteronym: true,
-        });
-        let str = p_res.map((syllable) => syllable[0]).join("");
-        input = str.replace(/(\d)(?=[a-z])/gi, "$1 ");
-        inputReal = input.length > 0 ? input : placeholder;
+        inputPinyin = pinyin(inputChinese, {style: pinyin.STYLE_TONE2, segment: "segmentit"}).join(" ");
+        pinyinToBeConverted = inputPinyin.length > 0 ? inputPinyin : defaultPinyin;
     }
 </script>
 
@@ -57,21 +51,21 @@
         文字转换
     </MartianSubtitle>
 
-    <input id="chinese-input" type="text" spellcheck="false"
-           class:valid placeholder="{placeholder_chinese}" 
-           bind:value={input_chinese} on:keyup={slowUpdateChinese}>
-    <input id="pinyin-input" type="text" spellcheck="false"
-           class:valid {placeholder} bind:value={input} on:keyup={slowUpdate}>
+    <input id="chinese-input" type="text" spellcheck="false" placeholder="{defaultChinese}（输入汉字）"
+           bind:value={inputChinese} on:keyup={slowUpdateChinese} class="valid">
+
+    <input id="pinyin-input" type="text" spellcheck="false" placeholder="{defaultPinyin}（输入拼音）"
+           bind:value={inputPinyin} on:keyup={slowUpdatePinyin} class:valid>
 
     <br>
 
     <div id="output" class="scroll-x">
         <div class="text" style:display={valid ? "none" : "block"}>
             语法错误：请输入用数字标记声调的拼音。<br>
-            例如：<code>wen2 ben3</code>（文本）
+            例如：wen2 ben3（文本）
         </div>
         <div class="output-martian" style:display={valid ? "block" : "none"}>
-            <PinyinWithNumbers input={inputReal} color="#eee" height="5rem" bind:valid />
+            <PinyinWithNumbers input={pinyinToBeConverted} color="#eee" height="5rem" bind:valid/>
         </div>
     </div>
 
