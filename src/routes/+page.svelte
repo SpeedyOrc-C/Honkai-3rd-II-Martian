@@ -6,21 +6,32 @@
     import {Tones} from "$lib/Pinyin";
     import Glyph from "$lib/Martian/Glyph.svelte";
     import MartianSubtitle from "./MartianSubtitle.svelte";
+    import {pinyin} from "pinyin";
 
-    const placeholder = "di4 qiu2 ni3 hao3";
     const letterGroups = [
         ["A", "O", "E", "I", "U", "Y", "W"],
         ["B", "P", "M", "F", "D", "T", "N", "L"],
         ["G", "K", "H", "J", "Q", "X"],
         ["Z", "C", "S", "R", "ZH", "CH", "SH"],
     ];
-    let input = "";
-    let valid = true;
-    let inputReal = placeholder;
-    let slowUpdate = slowdown(update, 1000);
+    const defaultPinyin = "di4 qiu2 ni3 hao3";
+    const defaultChinese = "地球你好";
+    const slowUpdatePinyin = slowdown(updatePinyin, 1000);
+    const slowUpdateChinese = slowdown(updateChinese, 1000);
 
-    function update() {
-        inputReal = input.length > 0 ? input : placeholder;
+    let pinyinToBeConverted = defaultPinyin;
+    let inputPinyin = "";
+    let inputChinese = "";
+    let valid = true;
+
+    function updatePinyin() {
+        inputChinese = "";
+        pinyinToBeConverted = inputPinyin.length > 0 ? inputPinyin : defaultPinyin;
+    }
+
+    function updateChinese() {
+        inputPinyin = pinyin(inputChinese, {style: pinyin.STYLE_TONE2, segment: "segmentit"}).join(" ");
+        pinyinToBeConverted = inputPinyin.length > 0 ? inputPinyin : defaultPinyin;
     }
 </script>
 
@@ -35,18 +46,21 @@
         文字转换
     </MartianSubtitle>
 
-    <input id="pinyin-input" type="text" spellcheck="false"
-           class:valid {placeholder} bind:value={input} on:keyup={slowUpdate}>
+    <input id="chinese-input" type="text" spellcheck="false" placeholder="{defaultChinese}（输入汉字）"
+           bind:value={inputChinese} on:keyup={slowUpdateChinese} class="valid">
+
+    <input id="pinyin-input" type="text" spellcheck="false" placeholder="{defaultPinyin}（输入拼音）"
+           bind:value={inputPinyin} on:keyup={slowUpdatePinyin} class:valid>
 
     <br>
 
     <div id="output" class="scroll-x">
         <div class="text" style:display={valid ? "none" : "block"}>
             语法错误：请输入用数字标记声调的拼音。<br>
-            例如：<code>wen2 ben3</code>（文本）
+            例如：wen2 ben3（文本）
         </div>
         <div class="output-martian" style:display={valid ? "block" : "none"}>
-            <PinyinWithNumbers input={inputReal} color="#eee" height="5rem" bind:valid />
+            <PinyinWithNumbers input={pinyinToBeConverted} color="#eee" height="5rem" bind:valid/>
         </div>
     </div>
 
@@ -133,7 +147,7 @@
         font-size: 1.2rem
         font-family: sans-serif
 
-    #pinyin-input
+    #pinyin-input, #chinese-input
         display: block
         width: 100%
         max-width: 50rem
@@ -146,6 +160,9 @@
         background: #8f4014
         &.valid
             background: unset
+
+    #chinese-input
+        margin-bottom: 1rem
 
     #output
         margin: 0 auto
@@ -196,8 +213,4 @@
                 width: 3rem
                 position: relative
                 overflow: visible
-
-    .even-pos-placeholder
-        height: 3rem
-        width: 3rem
 </style>
