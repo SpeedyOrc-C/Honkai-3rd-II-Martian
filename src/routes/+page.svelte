@@ -8,11 +8,6 @@
     import MartianSubtitle from "./MartianSubtitle.svelte";
     import {pinyin} from "pinyin";
 
-//     console.log(pinyin("我喜欢你", {
-//   segment: "nodejieba",         // 启用分词
-//   group: true,                  // 启用词组
-// }));
-
     const letterGroups = [
         ["A", "O", "E", "I", "U", "Y", "W"],
         ["B", "P", "M", "F", "D", "T", "N", "L"],
@@ -218,8 +213,4 @@
                 width: 3rem
                 position: relative
                 overflow: visible
-
-    .even-pos-placeholder
-        height: 3rem
-        width: 3rem
 </style>
