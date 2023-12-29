@@ -3,10 +3,10 @@
 
     let canvas: HTMLCanvasElement;
 
-    let pinyin: string;
-    let foregroundColor: string;
-    let backgroundColor: string;
-    let transparentBackground: boolean;
+    let pinyin = "";
+    let foregroundColor = "#000000";
+    let backgroundColor = "#ffffff";
+    let transparentBackground = true;
     let weight = 10;
     let imageHeight = 500;
     let image: string | null = null;
