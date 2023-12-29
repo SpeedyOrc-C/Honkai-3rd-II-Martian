@@ -42,7 +42,7 @@
     <title>崩坏三（第二部）火星文生成器</title>
 </svelte:head>
 
-<form action="">
+<form>
     <table>
         <tr>
             <td><label for="pinyin">拼音</label></td>
@@ -79,7 +79,7 @@
         </tr>
     </table>
 
-    <button on:click={render} type="submit">生成</button>
+    <button on:click={render} type="submit" disabled={pinyin.length === 0}>生成</button>
     <button on:click={copyToClipboard} disabled={image == null}>复制到剪贴板</button>
 </form>
 
@@ -93,9 +93,13 @@
     </div>
 {/if}
 
-<canvas bind:this={canvas} style="display: none"/>
+<canvas bind:this={canvas} />
 
 <style>
+    canvas {
+        display: none;
+    }
+
     img {
         height: 10rem;
     }
