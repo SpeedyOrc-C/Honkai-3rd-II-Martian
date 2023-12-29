@@ -150,11 +150,6 @@ export default class MartianRenderer
         }
     }
 
-    image()
-    {
-        return this.canvas.toDataURL("image/png");
-    }
-
     private dot(x: number, y: number)
     {
         this.ctx.beginPath();

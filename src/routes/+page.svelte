@@ -1,6 +1,5 @@
 <script lang="ts">
     import "../global.sass";
-    import {slowdown} from "$lib/SlowExecution";
     import {Tones} from "$lib/Tones";
     import MartianSubtitle from "./MartianSubtitle.svelte";
     import type {Martian} from "$lib/Martian";
@@ -166,7 +165,7 @@
         font-size: 1.2rem
         font-family: sans-serif
 
-    #pinyin-input, #chinese-input
+    #pinyin-input
         display: block
         width: 100%
         max-width: 50rem
@@ -179,9 +178,6 @@
         background: #8f4014
         &.valid
             background: unset
-
-    #chinese-input
-        margin-bottom: 1rem
 
     #output
         margin: 0 auto

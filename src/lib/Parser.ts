@@ -45,7 +45,7 @@ export async function pinyinSyllableP(input: string): Promise<[Syllable, string]
 }
 
 export const spaceP: TParser<Space> =
-    p.map(p.str(" "), x => new Space());
+    p.map(p.str(" "), _ => new Space());
 
 export const martianComponentP: TParser<MartianComponent> =
     p.alt(pinyinSyllableP, spaceP);
