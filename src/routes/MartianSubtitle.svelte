@@ -1,13 +1,14 @@
 <script lang="ts">
-    import PinyinWithNumbers from "$lib/PinyinWithNumbers.svelte";
+    import type {Martian} from "$lib/Martian";
+    import CanvasMartian from "$lib/CanvasMartian.svelte";
 
-    export let martian: string
+    export let martian: Martian;
 </script>
 
 <div class="martian-subtitle">
     <div class="text"><slot/></div>
     <div style="width: 1rem"/>
-    <PinyinWithNumbers input={martian} color="#333" height="2rem" weight={0.15} />
+    <CanvasMartian sentence={martian} strokeWeight={0.08} color="#333" />
 </div>
 
 <style lang="sass">
@@ -29,6 +30,4 @@
         color: #333
         font-family: sans-serif
         background: #fdd807
-
-
 </style>

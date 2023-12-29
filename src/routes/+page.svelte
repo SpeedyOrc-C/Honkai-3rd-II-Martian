@@ -1,12 +1,14 @@
 <script lang="ts">
     import "../global.sass";
-    import PinyinWithNumbers from "$lib/PinyinWithNumbers.svelte";
     import {slowdown} from "$lib/SlowExecution";
-    import Letter from "$lib/Martian/Letter.svelte";
-    import {Tones} from "$lib/Pinyin";
-    import Glyph from "$lib/Martian/Glyph.svelte";
+    import {Tones} from "$lib/Tones";
     import MartianSubtitle from "./MartianSubtitle.svelte";
-    import {pinyin} from "pinyin";
+    import type {Martian} from "$lib/Martian";
+    import {martianP} from "$lib/Parser";
+    import {onMount} from "svelte";
+    import CanvasMartianLetter from "$lib/CanvasMartianLetter.svelte";
+    import CanvasMartian from "$lib/CanvasMartian.svelte";
+    import {Syllable} from "$lib/Martian";
 
     const letterGroups = [
         ["A", "O", "E", "I", "U", "Y", "W"],
@@ -15,23 +17,41 @@
         ["Z", "C", "S", "R", "ZH", "CH", "SH"],
     ];
     const defaultPinyin = "di4 qiu2 ni3 hao3";
-    const defaultChinese = "地球你好";
-    const slowUpdatePinyin = slowdown(updatePinyin, 1000);
-    const slowUpdateChinese = slowdown(updateChinese, 1000);
 
     let pinyinToBeConverted = defaultPinyin;
     let inputPinyin = "";
-    let inputChinese = "";
     let valid = true;
+    let martian: Martian = [];
 
-    function updatePinyin() {
-        inputChinese = "";
-        pinyinToBeConverted = inputPinyin.length > 0 ? inputPinyin : defaultPinyin;
-    }
+    let martianTitleConversion: Martian = [];
+    let martianTitleWriting: Martian = [];
+    let martianTitleAlphabet: Martian = [];
+    let martianDefaultPinyin: Martian = [];
 
-    function updateChinese() {
-        inputPinyin = pinyin(inputChinese, {style: pinyin.STYLE_TONE2, segment: "segmentit"}).join(" ");
+    onMount(async () => {
+        const [[m1,], [m2,], [m3,], [m4,]] = await Promise.all([
+            martianP("wen2 zi4 zhuan3 huan4"),
+            martianP("shu1 xie3 fang1 fa3"),
+            martianP("zi4 mu3 biao3"),
+            martianP(defaultPinyin),
+        ]);
+        martianTitleConversion = m1;
+        martianTitleWriting = m2;
+        martianTitleAlphabet = m3;
+        martianDefaultPinyin = m4;
+        martian = martianDefaultPinyin;
+    });
+
+    async function updatePinyin() {
         pinyinToBeConverted = inputPinyin.length > 0 ? inputPinyin : defaultPinyin;
+        try {
+            const [m,] = await martianP(pinyinToBeConverted);
+            martian = m;
+            valid = true;
+        } catch (e) {
+            martian = martianDefaultPinyin;
+            valid = false;
+        }
     }
 </script>
 
@@ -42,15 +62,12 @@
 <div id="wrapper">
     <div style="height: 30vh"/>
 
-    <MartianSubtitle martian="wen2 zi4 zhuan3 huan4">
+    <MartianSubtitle martian={martianTitleConversion}>
         文字转换
     </MartianSubtitle>
 
-    <input id="chinese-input" type="text" spellcheck="false" placeholder="{defaultChinese}（输入汉字）"
-           bind:value={inputChinese} on:keyup={slowUpdateChinese} class="valid">
-
     <input id="pinyin-input" type="text" spellcheck="false" placeholder="{defaultPinyin}（输入拼音）"
-           bind:value={inputPinyin} on:keyup={slowUpdatePinyin} class:valid>
+           bind:value={inputPinyin} on:keyup={updatePinyin} class:valid>
 
     <br>
 
@@ -60,13 +77,15 @@
             例如：wen2 ben3（文本）
         </div>
         <div class="output-martian" style:display={valid ? "block" : "none"}>
-            <PinyinWithNumbers input={pinyinToBeConverted} color="#eee" height="5rem" bind:valid/>
+            <div style="height: 5rem; overflow-y: hidden; overflow-x: auto">
+                <CanvasMartian sentence={martian} color="#eee" strokeWeight={0.05} />
+            </div>
         </div>
     </div>
 
     <br><br><br>
 
-    <MartianSubtitle martian="shu1 xie3 fang1 fa3">
+    <MartianSubtitle martian={martianTitleWriting}>
         书写方法
     </MartianSubtitle>
 
@@ -87,7 +106,7 @@
             </div>
             <div>
                 <div style="height: 2rem; width: 2rem; margin-left: 1rem;">
-                    <Letter letter="/" color="#eee"/>
+                    <CanvasMartianLetter letter="/" color="#eee" strokeWeight={0.1} />
                 </div>
             </div>
         </div>
@@ -95,7 +114,7 @@
 
     <br><br><br>
 
-    <MartianSubtitle martian="zi4 mu3 biao3">
+    <MartianSubtitle martian={martianTitleAlphabet}>
         字母表
     </MartianSubtitle>
 
@@ -113,9 +132,9 @@
                             {#each Tones as tone}
                             <div class="consonant">
                                 {#if letter.length === 1}
-                                    <Letter {letter} color="#eee" {tone} />
+                                    <CanvasMartianLetter {letter} color="#eee" {tone} strokeWeight={0.1} />
                                 {:else}
-                                    <Glyph syllable={letter} color="#eee" height="3rem" {tone} />
+                                    <CanvasMartian sentence={[new Syllable(letter, tone)]} color="#eee" strokeWeight={0.05} />
                                 {/if}
                             </div>
                             {/each}

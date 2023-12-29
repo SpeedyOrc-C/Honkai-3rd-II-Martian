@@ -1,4 +1,50 @@
-export const LetterShapes: Map<string, [number, number][][]> = new Map([
+import {Tone} from "$lib/Tone";
+
+export function rotationFromTone(tone: Tone) {
+    switch (tone) {
+        case Tone.Flat:
+            return 0;
+        case Tone.Rising:
+            return 90;
+        case Tone.FallRising:
+            return 180;
+        case Tone.Falling:
+            return 270;
+        case Tone.Neutral:
+            return 0;
+    }
+}
+
+export function rotate90([x, y]: [number, number]): [number, number] {
+    return [-y + 6, x];
+}
+
+export function rotate180([x, y]: [number, number]): [number, number] {
+    return [-x + 6, -y + 6];
+}
+
+export function rotate270([x, y]: [number, number]): [number, number] {
+    return [y, -x + 6];
+}
+
+export function rotate(shape: [number, number][][], rotation: number): [number, number][][] {
+    if (rotation == 0)
+        return shape;
+    if (rotation == 90)
+        return shape.map(line => line.map(rotate90));
+    if (rotation == 180)
+        return shape.map(line => line.map(rotate180));
+    if (rotation == 270)
+        return shape.map(line => line.map(rotate270));
+    throw new Error(`Invalid rotation: ${rotation}`);
+}
+
+export const placeholder: [number, number][][] = [
+    [[5, 1]],
+    [[1, 5], [4, 2]],
+];
+
+export const MartianShapes: Map<string, [number, number][][]> = new Map([
     ["A", [
         [[5, 1]],
         [[1, 5], [4, 2]],

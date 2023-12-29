@@ -1,10 +1,4 @@
-export enum Tone {
-    Flat,
-    Rising,
-    FallRising,
-    Falling,
-    Neutral
-}
+import {Tone} from "$lib/Tone";
 
 export const Tones = [
     Tone.Flat,
