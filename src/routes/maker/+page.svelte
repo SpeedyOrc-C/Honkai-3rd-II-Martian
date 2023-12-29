@@ -13,15 +13,19 @@
 
     async function render()
     {
-        await new MartianRenderer(
-            canvas,
-            foregroundColor,
-            weight / 100,
-            imageHeight,
-            transparentBackground ? null : backgroundColor
-        ).drawSentence(pinyin);
+        try {
+            await new MartianRenderer(
+                canvas,
+                foregroundColor,
+                weight / 100,
+                imageHeight,
+                transparentBackground ? null : backgroundColor
+            ).drawSentence(pinyin);
 
-        image = canvas.toDataURL();
+            image = canvas.toDataURL();
+        } catch (e) {
+            alert("拼音输入格式错误。");
+        }
     }
 
     async function copyToClipboard()
