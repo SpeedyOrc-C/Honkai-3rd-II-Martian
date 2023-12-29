@@ -46,7 +46,9 @@
     <table>
         <tr>
             <td><label for="pinyin">拼音</label></td>
-            <td><input type="text" id="pinyin" bind:value={pinyin} placeholder="di4 qiu2 ni3 hao3" required></td>
+            <td><input type="text" id="pinyin" bind:value={pinyin}
+                       placeholder="di4 qiu2 ni3 hao3"
+                       required autofocus autocomplete="off"></td>
         </tr>
         <tr>
             <td><label for="foreground-color">前景色</label></td>
