@@ -1,5 +1,7 @@
 import {Tone} from "$lib/Tone";
 
+type Coordinate = [number, number];
+
 export function rotationFromTone(tone: Tone) {
     switch (tone) {
         case Tone.Flat:
@@ -15,19 +17,19 @@ export function rotationFromTone(tone: Tone) {
     }
 }
 
-export function rotate90([x, y]: [number, number]): [number, number] {
+export function rotate90([x, y]: Coordinate): Coordinate {
     return [-y + 6, x];
 }
 
-export function rotate180([x, y]: [number, number]): [number, number] {
+export function rotate180([x, y]: Coordinate): Coordinate {
     return [-x + 6, -y + 6];
 }
 
-export function rotate270([x, y]: [number, number]): [number, number] {
+export function rotate270([x, y]: Coordinate): Coordinate {
     return [y, -x + 6];
 }
 
-export function rotate(shape: [number, number][][], rotation: number): [number, number][][] {
+export function rotate(shape: Coordinate[][], rotation: number): Coordinate[][] {
     if (rotation == 0)
         return shape;
     if (rotation == 90)
@@ -39,12 +41,12 @@ export function rotate(shape: [number, number][][], rotation: number): [number, 
     throw new Error(`Invalid rotation: ${rotation}`);
 }
 
-export const placeholder: [number, number][][] = [
+export const placeholder: Coordinate[][] = [
     [[5, 1]],
     [[1, 5], [4, 2]],
 ];
 
-export const MartianShapes: Map<string, [number, number][][]> = new Map([
+export const MartianShapes: Map<string, Coordinate[][]> = new Map([
     ["A", [
         [[5, 1]],
         [[1, 5], [4, 2]],

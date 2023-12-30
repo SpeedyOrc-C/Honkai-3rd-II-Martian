@@ -1,18 +1,18 @@
 import {martianP} from "$lib/Parser";
-import {MartianShapes, placeholder, rotate} from "$lib/MartianShapes";
+import {MartianShapes, placeholder, rotate, rotationFromTone} from "$lib/MartianShapes";
 import {type Martian, Space} from "$lib/Martian";
-import {Tone} from "$lib/Tone";
 
 const SENTENCE_ROW_NUMBER = 9;
 const LETTER_ROW_NUMBER = 5;
+const BOTTOM_LETTER_COORDS_Y_IN_SENTENCE = 4;
+
+const letterCoordsToCanvas = (x: number) => (-0.5 + x) / LETTER_ROW_NUMBER;
+const sentenceCoordsToCanvas = (x: number) => (-0.5 + x) / SENTENCE_ROW_NUMBER;
 
 export default class MartianRenderer
 {
     ctx: CanvasRenderingContext2D;
     strokeWidth: number;
-
-    private letterCoordsToCanvas = (x: number) => (-1 / 2 + x) / LETTER_ROW_NUMBER;
-    private sentenceCoordsToCanvas = (x: number) => (-1 / 2 + x) / SENTENCE_ROW_NUMBER;
 
     constructor(
         public canvas: HTMLCanvasElement,
@@ -57,8 +57,8 @@ export default class MartianRenderer
             throw new Error(`Shape of "${letter}" not found.`);
         }
 
-        for (const line of rotate(shape, rotation)) {
-            this.lines(line, this.letterCoordsToCanvas);
+        for (const lines of rotate(shape, rotation)) {
+            this.drawLines(lines, letterCoordsToCanvas);
         }
     }
 
@@ -87,16 +87,16 @@ export default class MartianRenderer
     */
     async drawSentenceFromMartian(martian: Martian)
     {
-        let columnsNumber = 0;
+        let columnNumber = 0;
         for (const syllable of martian) {
             if (syllable instanceof Space) {
-                columnsNumber += 3;
+                columnNumber += 3;
             } else {
-                columnsNumber += 1 + 4 * Math.ceil(syllable.syllable.length / 2);
+                columnNumber += 1 + 4 * Math.ceil(syllable.syllable.length / 2);
             }
         }
 
-        this.canvas.width = this.resolution * columnsNumber / 9;
+        this.canvas.width = this.resolution * columnNumber / 9;
 
         if (this.background != null) {
             this.ctx.fillStyle = this.background;
@@ -117,23 +117,17 @@ export default class MartianRenderer
                     throw new Error(`Shape of "${letter}" not found.`);
                 }
 
-                let rotation = 0;
-                if (syllable.tone == Tone.Rising)
-                    rotation = 90;
-                else if (syllable.tone == Tone.FallRising)
-                    rotation = 180;
-                else if (syllable.tone == Tone.Falling)
-                    rotation = 270;
-
+                const rotation = rotationFromTone(syllable.tone)
                 const rotatedShape = rotate(shape, rotation);
 
                 if (top) {
-                    for (const line of rotatedShape) {
-                        this.lines(line, this.sentenceCoordsToCanvas, cursor);
+                    for (const lines of rotatedShape) {
+                        this.drawLines(lines, sentenceCoordsToCanvas, cursor);
                     }
                 } else {
-                    for (const line of rotatedShape) {
-                        this.lines(line, this.sentenceCoordsToCanvas, cursor, 4);
+                    for (const lines of rotatedShape) {
+                        this.drawLines(lines, sentenceCoordsToCanvas, cursor,
+                            BOTTOM_LETTER_COORDS_Y_IN_SENTENCE);
                     }
                     cursor += 4;
                 }
@@ -141,8 +135,8 @@ export default class MartianRenderer
             }
 
             if (!top) {
-                for (const line of placeholder) {
-                    this.lines(line, this.sentenceCoordsToCanvas, cursor, 4);
+                for (const lines of placeholder) {
+                    this.drawLines(lines, sentenceCoordsToCanvas, cursor, 4);
                 }
                 top = true;
                 cursor += 4;
@@ -150,7 +144,7 @@ export default class MartianRenderer
         }
     }
 
-    private dot(x: number, y: number)
+    private drawDot(x: number, y: number)
     {
         this.ctx.beginPath();
         {
@@ -160,7 +154,7 @@ export default class MartianRenderer
         }
     }
 
-    private line(x1: number, y1: number, x2: number, y2: number)
+    private drawLine(x1: number, y1: number, x2: number, y2: number)
     {
         this.ctx.beginPath();
         {
@@ -171,7 +165,7 @@ export default class MartianRenderer
         }
     }
 
-    private lines(
+    private drawLines(
         points: Array<[number, number]>,
         coordsMap: (x: number) => number,
         dx = 0,
@@ -184,7 +178,7 @@ export default class MartianRenderer
         const x = coordsMap(nx + dx);
         const y = coordsMap(ny + dy);
 
-        this.dot(x, y);
+        this.drawDot(x, y);
 
         for (let i = 1; i < points.length; i++) {
             const [nx1, ny1] = points[i - 1];
@@ -195,8 +189,8 @@ export default class MartianRenderer
             const x2 = coordsMap(nx2 + dx);
             const y2 = coordsMap(ny2 + dy);
 
-            this.line(x1, y1, x2, y2);
-            this.dot(x2, y2);
+            this.drawLine(x1, y1, x2, y2);
+            this.drawDot(x2, y2);
         }
     }
 }
