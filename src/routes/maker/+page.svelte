@@ -92,7 +92,7 @@
 
 {#if image}
     <div>
-        <a href={image}>
+        <a href={image} download="崩三火星文-{pinyin.replace(/\s+/g, '-')}">
             <img src={image} alt="生成的图像">
         </a>
     </div>
