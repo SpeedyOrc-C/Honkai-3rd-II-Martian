@@ -9,7 +9,7 @@
     let foregroundColor = "#000000";
     let backgroundColor = "#ffffff";
     let transparentBackground = true;
-    let weight = 10;
+    let weightPercentage = 10;
     let imageHeight = 500;
     let image: string | null = null;
 
@@ -19,7 +19,7 @@
             await new MartianRenderer(
                 canvas,
                 foregroundColor,
-                weight / 100,
+                weightPercentage / 100,
                 imageHeight,
                 transparentBackground ? null : backgroundColor
             ).drawSentence(pinyin);
@@ -69,9 +69,9 @@
             <td><input type="checkbox" id="transparent-background" bind:checked={transparentBackground}></td>
         </tr>
         <tr>
-            <td><label for="stroke-weight">笔画粗细</label></td>
-            <td><input type="number" id="stroke-weight" bind:value={weight}><br>
-                <input type="range" id="stroke-weight-range" bind:value={weight}
+            <td><label for="stroke-weight-percentage">笔画粗细</label></td>
+            <td><input type="number" id="stroke-weight-percentage" bind:value={weightPercentage}><br>
+                <input type="range" id="stroke-weight-percentage-range" bind:value={weightPercentage}
                        min="1" max="20" step="1">
             </td>
         </tr>
