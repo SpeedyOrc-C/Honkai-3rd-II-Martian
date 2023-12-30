@@ -1,7 +1,9 @@
 <script lang="ts">
     import MartianRenderer from "$lib/MartianRenderer";
+    import {onMount} from "svelte";
 
     let canvas: HTMLCanvasElement;
+    let pinyinInput: HTMLInputElement;
 
     let pinyin = "";
     let foregroundColor = "#000000";
@@ -36,6 +38,10 @@
         const blob = await data.blob();
         await navigator.clipboard.write([new ClipboardItem({[blob.type]: blob})]);
     }
+
+    onMount(() => {
+        pinyinInput.focus();
+    });
 </script>
 
 <svelte:head>
@@ -46,9 +52,8 @@
     <table>
         <tr>
             <td><label for="pinyin">拼音</label></td>
-            <td><input type="text" id="pinyin" bind:value={pinyin}
-                       placeholder="di4 qiu2 ni3 hao3"
-                       required autofocus autocomplete="off"></td>
+            <td><input type="text" id="pinyin" bind:value={pinyin} bind:this={pinyinInput}
+                       placeholder="di4 qiu2 ni3 hao3" required autocomplete="off"></td>
         </tr>
         <tr>
             <td><label for="foreground-color">前景色</label></td>
