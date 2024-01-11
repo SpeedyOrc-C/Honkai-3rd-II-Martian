@@ -7,7 +7,7 @@
     import {onMount} from "svelte";
     import CanvasMartianLetter from "$lib/CanvasMartianLetter.svelte";
     import CanvasMartian from "$lib/CanvasMartian.svelte";
-    import {Syllable} from "$lib/Martian";
+    import {MartianSyllable} from "$lib/Martian";
 
     const letterGroups = [
         ["A", "O", "E", "I", "U", "Y", "W"],
@@ -133,7 +133,7 @@
                                 {#if letter.length === 1}
                                     <CanvasMartianLetter {letter} color="#eee" {tone} strokeWeight={0.1} />
                                 {:else}
-                                    <CanvasMartian sentence={[new Syllable(letter, tone)]} color="#eee" strokeWeight={0.05} />
+                                    <CanvasMartian sentence={[new MartianSyllable(letter, tone)]} color="#eee" strokeWeight={0.05} />
                                 {/if}
                             </div>
                             {/each}

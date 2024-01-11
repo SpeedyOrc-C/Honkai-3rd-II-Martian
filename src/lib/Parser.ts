@@ -1,5 +1,5 @@
 import {Parser as p, type TParser} from "crazy-parser";
-import {type MartianComponent, Syllable, Space, type Martian} from "$lib/Martian";
+import {type MartianComponent, MartianSyllable, MartianSpace, type Martian, MartianGlyph} from "$lib/Martian";
 import {Tone} from "$lib/Tone";
 
 export async function digitP(input: string): Promise<[string, string]> {
@@ -33,7 +33,7 @@ export async function toneP(input: string): Promise<[Tone, string]> {
     }
 }
 
-export async function pinyinSyllableP(input: string): Promise<[Syllable, string]> {
+export async function martianSyllableP(input: string): Promise<[MartianSyllable, string]> {
     const [syllableChars, tail] = await p.many(alphaP)(input);
     if (!syllableChars) throw "";
 
@@ -41,14 +41,20 @@ export async function pinyinSyllableP(input: string): Promise<[Syllable, string]
     if (tone == null) throw "";
 
     const syllable = syllableChars.join("");
-    return [new Syllable(syllable, tone), tail2];
+    return [new MartianSyllable(syllable, tone), tail2];
 }
 
-export const spaceP: TParser<Space> =
-    p.map(p.str(" "), _ => new Space());
+export async function martianGlyphP(input: string): Promise<[MartianGlyph, string]> {
+    if (input.length == 0) throw "";
+
+    return [new MartianGlyph(input.charAt(0)), input.slice(1)];
+}
+
+export const spaceP: TParser<MartianSpace> =
+    p.map(p.str(" "), _ => new MartianSpace());
 
 export const martianComponentP: TParser<MartianComponent> =
-    p.alt(pinyinSyllableP, spaceP);
+    p.alts(martianSyllableP, spaceP, martianGlyphP);
 
 export const martianP: TParser<Martian> =
     p.many(martianComponentP);

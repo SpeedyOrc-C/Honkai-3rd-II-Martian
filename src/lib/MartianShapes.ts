@@ -41,12 +41,14 @@ export function rotate(shape: Coordinate[][], rotation: number): Coordinate[][] 
     throw new Error(`Invalid rotation: ${rotation}`);
 }
 
-export const placeholder: Coordinate[][] = [
+export type Strokes = Coordinate[][];
+
+export const placeholder: Strokes = [
     [[5, 1]],
     [[1, 5], [4, 2]],
 ];
 
-export const MartianShapes: Map<string, Coordinate[][]> = new Map([
+export const MartianLetterShapes: Map<string, Strokes> = new Map([
     ["A", [
         [[5, 1]],
         [[1, 5], [4, 2]],
@@ -178,4 +180,14 @@ export const MartianShapes: Map<string, Coordinate[][]> = new Map([
         [[5, 1]],
         [[1, 5], [4, 2]],
     ]],
+]);
+
+export class MartianGlyphShape { constructor(public width: number, public strokes: Strokes) {} }
+
+export const MartianGlyphShapes: Map<string, MartianGlyphShape> = new Map([
+    ["3", new MartianGlyphShape(7, [
+        [[1, 1], [4, 1]],
+        [[1, 5], [4, 5]],
+        [[1, 9], [7, 9]],
+    ])],
 ]);

@@ -1,9 +1,12 @@
 import {martianP} from "$lib/Parser";
-import {MartianShapes, placeholder, rotate, rotationFromTone} from "$lib/MartianShapes";
-import {type Martian, Space} from "$lib/Martian";
+import {MartianGlyphShapes, MartianLetterShapes, placeholder, rotate, rotationFromTone} from "$lib/MartianShapes";
+import {type Martian, MartianGlyph, MartianSpace, MartianSyllable} from "$lib/Martian";
 
 const SENTENCE_ROW_NUMBER = 9;
 const LETTER_ROW_NUMBER = 5;
+// One row of two letters overlaps, so minus 1.
+const LETTER_MOVE_ROW_NUMBER = LETTER_ROW_NUMBER - 1;
+const SPACE_ROW_NUMBER = 3;
 const BOTTOM_LETTER_COORDS_Y_IN_SENTENCE = 4;
 
 const letterCoordsToCanvas = (x: number) => (-0.5 + x) / LETTER_ROW_NUMBER;
@@ -30,15 +33,38 @@ export default class MartianRenderer
         this.strokeWidth = this.resolution * this.weight;
     }
 
-    /*
-         1  3  5  7  9
-         |  |  |  |  |
-    1 -  @  @  @  @  @
-    3 -  @  *  *  *  @
-    5 -  @  *  *  *  @
-    7 -  @  *  *  *  @
-    9 -  @  @  @  @  @
-    */
+    async drawSentenceFromMartian(martian: Martian)
+    {
+        let columnNumber = this.countColumnNumber(martian);
+        console.log("CN", columnNumber);
+
+        this.canvas.width = this.resolution * columnNumber / 9;
+
+        if (this.background != null) {
+            this.ctx.fillStyle = this.background;
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+
+        let cursor = 0;
+        for (const component of martian) {
+            if (component instanceof MartianSpace) {
+                cursor += SPACE_ROW_NUMBER;
+                continue;
+            }
+
+            if (component instanceof MartianSyllable) {
+                cursor = this.drawMartianSyllable(component, cursor);
+                continue;
+            }
+
+            if (component instanceof MartianGlyph) {
+                cursor = this.drawMartianGlyph(component, cursor);
+                continue;
+            }
+        }
+        console.log("CUR", cursor);
+    }
+
     async drawLetter(letter: string, rotation = 0)
     {
         if (letter.length !== 1) {
@@ -52,9 +78,9 @@ export default class MartianRenderer
             this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         }
 
-        const shape = MartianShapes.get(letter.toUpperCase());
+        const shape = MartianLetterShapes.get(letter.toUpperCase());
         if (shape == undefined) {
-            throw new Error(`Shape of "${letter}" not found.`);
+            throw new Error(`Shape of letter "${letter}" not found.`);
         }
 
         for (const lines of rotate(shape, rotation)) {
@@ -72,76 +98,83 @@ export default class MartianRenderer
         }
     }
 
-    /*
-         0  1  2  3  4  5  6  7  8  9  10 11 12
-         |  |  |  |  |  |  |  |  |  |  |  |  |
-     0 - @  @  @  @  @  @  @  @  @  _  _  _  @
-     1 - @  *  *  *  @  *  *  *  @  _  _  _  @
-     2 - @  *  *  *  @  *  *  *  @  _  _  _  @
-     3 - @  *  *  *  @  *  *  *  @  _  _  _  @
-     4 - @  @  @  @  @  @  @  @  @  _  _  _  @
-     5 - @  *  *  *  @  *  *  *  @  _  _  _  @
-     6 - @  *  *  *  @  *  *  *  @  _  _  _  @
-     7 - @  *  *  *  @  *  *  *  @  _  _  _  @
-     8 - @  @  @  @  @  @  @  @  @  _  _  _  @
-    */
-    async drawSentenceFromMartian(martian: Martian)
+    private countColumnNumber(martian: Martian): number
     {
-        let columnNumber = 0;
+        let width = 0;
+
         for (const syllable of martian) {
-            if (syllable instanceof Space) {
-                columnNumber += 3;
-            } else {
-                columnNumber += 1 + 4 * Math.ceil(syllable.syllable.length / 2);
-            }
-        }
-
-        this.canvas.width = this.resolution * columnNumber / 9;
-
-        if (this.background != null) {
-            this.ctx.fillStyle = this.background;
-            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-        }
-
-        let cursor = 0;
-        let top = true;
-        for (const syllable of martian) {
-            if (syllable instanceof Space) {
-                cursor += 4;
-                top = true;
+            if (syllable instanceof MartianSpace) {
+                width += SPACE_ROW_NUMBER;
                 continue;
             }
-            for (const letter of syllable.syllable) {
-                const shape = MartianShapes.get(letter.toUpperCase());
-                if (shape == undefined) {
-                    throw new Error(`Shape of "${letter}" not found.`);
-                }
 
-                const rotation = rotationFromTone(syllable.tone)
-                const rotatedShape = rotate(shape, rotation);
-
-                if (top) {
-                    for (const lines of rotatedShape) {
-                        this.drawLines(lines, sentenceCoordsToCanvas, cursor);
-                    }
-                } else {
-                    for (const lines of rotatedShape) {
-                        this.drawLines(lines, sentenceCoordsToCanvas, cursor,
-                            BOTTOM_LETTER_COORDS_Y_IN_SENTENCE);
-                    }
-                    cursor += 4;
-                }
-                top = !top;
+            if (syllable instanceof MartianSyllable) {
+                width += 1 + LETTER_MOVE_ROW_NUMBER * Math.ceil(syllable.syllable.length / 2);
+                continue;
             }
 
-            if (!top) {
-                for (const lines of placeholder) {
-                    this.drawLines(lines, sentenceCoordsToCanvas, cursor, 4);
+            if (syllable instanceof MartianGlyph) {
+                const shape = MartianGlyphShapes.get(syllable.glyph);
+                if (shape == undefined) {
+                    throw new Error(`Shape of glyph "${syllable.glyph}" not found.`);
                 }
-                top = true;
-                cursor += 4;
+                width += shape.width;
+                continue;
             }
         }
+
+        return width;
+    }
+
+    private drawMartianSyllable(syllable: MartianSyllable, cursor: number)
+    {
+        let top = true;
+
+        for (const letter of syllable.syllable) {
+            const shape = MartianLetterShapes.get(letter.toUpperCase());
+            if (shape == undefined) {
+                throw new Error(`Shape of letter "${letter}" not found.`);
+            }
+
+            const rotation = rotationFromTone(syllable.tone)
+            const rotatedShape = rotate(shape, rotation);
+
+            if (top) {
+                for (const lines of rotatedShape) {
+                    this.drawLines(lines, sentenceCoordsToCanvas, cursor);
+                }
+            } else {
+                for (const lines of rotatedShape) {
+                    this.drawLines(lines, sentenceCoordsToCanvas, cursor,
+                        BOTTOM_LETTER_COORDS_Y_IN_SENTENCE);
+                }
+                cursor += LETTER_MOVE_ROW_NUMBER;
+            }
+            top = !top;
+        }
+
+        if (!top) {
+            for (const lines of placeholder) {
+                this.drawLines(lines, sentenceCoordsToCanvas, cursor, 4);
+            }
+            cursor += LETTER_MOVE_ROW_NUMBER;
+        }
+
+        return cursor + 1;
+    }
+
+    private drawMartianGlyph(glyph: MartianGlyph, cursor: number)
+    {
+        const shape = MartianGlyphShapes.get(glyph.glyph);
+        if (shape == undefined) {
+            throw new Error(`Shape of glyph "${glyph.glyph}" not found.`);
+        }
+
+        for (const lines of shape.strokes) {
+            this.drawLines(lines, sentenceCoordsToCanvas, cursor);
+        }
+
+        return cursor + shape.width;
     }
 
     private drawDot(x: number, y: number)
