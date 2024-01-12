@@ -128,7 +128,7 @@ export const MartianLetterShapes: Map<string, Strokes> = new Map([
     ]],
     ["P", [
         [[1, 1]],
-        [[5, 1], [3, 3]],
+        [[3, 1], [5, 1], [3, 3]],
         [[2, 2], [5, 5]],
     ]],
     ["Q", [
