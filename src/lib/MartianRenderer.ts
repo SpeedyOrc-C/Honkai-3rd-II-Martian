@@ -36,7 +36,6 @@ export default class MartianRenderer
     async drawSentenceFromMartian(martian: Martian)
     {
         let columnNumber = this.countColumnNumber(martian);
-        console.log("CN", columnNumber);
 
         this.canvas.width = this.resolution * columnNumber / 9;
 
@@ -62,7 +61,6 @@ export default class MartianRenderer
                 continue;
             }
         }
-        console.log("CUR", cursor);
     }
 
     async drawLetter(letter: string, rotation = 0)
