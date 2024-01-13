@@ -184,10 +184,49 @@ export const MartianLetterShapes: Map<string, Strokes> = new Map([
 
 export class MartianGlyphShape { constructor(public width: number, public strokes: Strokes) {} }
 
+const number = (strokes: Strokes) => new MartianGlyphShape(5, strokes);
+
 export const MartianGlyphShapes: Map<string, MartianGlyphShape> = new Map([
-    ["3", new MartianGlyphShape(7, [
-        [[1, 1], [4, 1]],
-        [[1, 5], [4, 5]],
-        [[1, 9], [7, 9]],
+    ["0", number([
+        [[3, 1], [1, 1], [1, 9]],
+        [[3, 7], [3, 9]],
+        [[5, 1], [5, 9]],
+    ])],
+    ["1", number([
+        [[1, 5], [3, 5]],
+    ])],
+    ["2", number([
+        [[1, 1], [3, 1]],
+        [[1, 9], [5, 9]],
+    ])],
+    ["3", number([
+        [[1, 1], [3, 1]],
+        [[1, 5], [3, 5]],
+        [[1, 9], [5, 9]],
+    ])],
+    ["4", number([
+        [[1, 1], [5, 1]],
+        [[1, 5], [2, 5]],
+        [[4, 5], [5, 5]],
+        [[1, 9], [5, 9]],
+    ])],
+    ["5", number([
+        [[1, 1], [5, 1], [5, 9]],
+    ])],
+    ["6", number([
+        [[1, 1], [5, 1], [5, 9]],
+        [[1, 5], [3, 5]],
+    ])],
+    ["7", number([
+        [[3, 1], [5, 1], [5, 9]],
+        [[1, 1], [1, 9], [3, 9]],
+    ])],
+    ["8", number([
+        [[1, 1], [1, 9], [3, 9]],
+        [[5, 1], [5, 9]],
+        [[3, 5], [5, 5]],
+    ])],
+    ["9", number([
+        [[1, 1], [1, 9], [5, 9], [5, 1]],
     ])],
 ]);
