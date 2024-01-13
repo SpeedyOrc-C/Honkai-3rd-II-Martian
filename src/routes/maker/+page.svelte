@@ -9,7 +9,7 @@
     let foregroundColor = "#000000";
     let backgroundColor = "#ffffff";
     let transparentBackground = true;
-    let weightPercentage = 10;
+    let weightPercentage = 9;
     let imageHeight = 500;
     let image: string | null = null;
 
