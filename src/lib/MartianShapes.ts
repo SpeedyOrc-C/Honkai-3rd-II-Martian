@@ -161,6 +161,7 @@ export const MartianLetterShapes: Map<string, Strokes> = new Map([
     ]],
     ["X", [
         [[5, 1]],
+        [[1, 5]],
         [[1, 1], [2, 2]],
         [[2, 4], [3, 3], [5, 5]],
     ]],
