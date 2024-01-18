@@ -15,7 +15,7 @@ export async function alphaP(input: string): Promise<[string, string]> {
     if (input.length == 0) throw "";
 
     const c = input.charAt(0);
-    if (!c.match(/[a-zA-Z]/)) throw "";
+    if (!c.match(/[a-züA-ZÜ]/)) throw "";
 
     return [c, input.slice(1)];
 }
@@ -40,7 +40,10 @@ export async function martianSyllableP(input: string): Promise<[MartianSyllable,
     const [tone, tail2] = await p.opt(toneP)(tail);
     if (tone == null) throw "";
 
-    const syllable = syllableChars.join("");
+    const syllable = syllableChars
+        .join("")
+        .toUpperCase()
+        .replace("V", "Ü");
     return [new MartianSyllable(syllable, tone), tail2];
 }
 

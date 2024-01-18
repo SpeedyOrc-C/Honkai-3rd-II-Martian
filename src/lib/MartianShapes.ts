@@ -154,6 +154,10 @@ export const MartianLetterShapes: Map<string, Strokes> = new Map([
         [[3, 1]],
         [[2, 2], [1, 3], [3, 5], [5, 3]],
     ]],
+    ["Ü", [
+        [[1, 1]],
+        [[2, 2], [5, 5], [1, 5]],
+    ]],
     ["W", [
         [[1, 1]],
         [[4, 1], [5, 2]],
@@ -229,5 +233,14 @@ export const MartianGlyphShapes: Map<string, MartianGlyphShape> = new Map([
     ])],
     ["9", number([
         [[1, 1], [1, 9], [5, 9], [5, 1]],
+    ])],
+
+    ["!", new MartianGlyphShape(1, [
+        [[1, 1], [1, 7]],
+        [[1, 9]],
+    ])],
+    ["?", new MartianGlyphShape(5, [
+        [[1, 1], [5, 1], [5, 4], [3, 6], [3, 7]],
+        [[3, 9]],
     ])],
 ]);
