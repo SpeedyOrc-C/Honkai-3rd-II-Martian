@@ -58,7 +58,7 @@ export default class MartianRenderer
                 continue;
             }
 
-            if (component instanceof MartianGlyph) {
+            /* (component instanceof MartianGlyph) */ {
                 cursor = this.drawMartianGlyph(component, cursor);
                 continue;
             }
@@ -113,7 +113,7 @@ export default class MartianRenderer
                 continue;
             }
 
-            if (syllable instanceof MartianGlyph) {
+            /* (syllable instanceof MartianGlyph) */ {
                 const shape = MartianGlyphShapes.get(syllable.glyph);
                 if (shape == undefined) {
                     throw new Error(`Shape of glyph "${syllable.glyph}" not found.`);
