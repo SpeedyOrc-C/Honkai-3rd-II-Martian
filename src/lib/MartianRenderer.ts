@@ -65,7 +65,7 @@ export default class MartianRenderer
         }
     }
 
-    async drawLetter(letter: string, rotation = 0)
+    async drawLetter(letter: string, rotation: Rotation = 0)
     {
         if (letter.length !== 1) {
             throw new Error("Letter must be a single character.");
@@ -126,7 +126,7 @@ export default class MartianRenderer
         return width;
     }
 
-    private drawMartianSyllable(syllable: MartianSyllable, cursor: number)
+    private drawMartianSyllable(syllable: MartianSyllable, cursor: number): number
     {
         let top = true;
 
@@ -163,7 +163,7 @@ export default class MartianRenderer
         return cursor + 1;
     }
 
-    private drawMartianGlyph(glyph: MartianGlyph, cursor: number)
+    private drawMartianGlyph(glyph: MartianGlyph, cursor: number): number
     {
         const shape = MartianGlyphShapes.get(glyph.glyph);
         if (shape == undefined) {
@@ -199,10 +199,8 @@ export default class MartianRenderer
     }
 
     private drawLines(
-        points: Array<[number, number]>,
-        coordsMap: (x: number) => number,
-        dx = 0,
-        dy = 0)
+        points: Array<[number, number]>, coordsMap: (x: number) => number,
+        dx: number = 0, dy: number = 0)
     {
         this.ctx.fillStyle = this.foreground;
         this.ctx.strokeStyle = this.foreground;

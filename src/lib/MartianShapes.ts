@@ -1,8 +1,10 @@
 import {Tone} from "$lib/Tone";
 
-type Coordinate = [number, number];
+export type Coordinate = [number, number];
+export type Shape = Coordinate[][];
+export type Rotation = 0 | 90 | 180 | 270;
 
-export function rotationFromTone(tone: Tone) {
+export function rotationFromTone(tone: Tone): Rotation {
     switch (tone) {
         case Tone.Flat:
             return 0;
@@ -29,7 +31,7 @@ export function rotate270([x, y]: Coordinate): Coordinate {
     return [y, -x + 6];
 }
 
-export function rotate(shape: Coordinate[][], rotation: number): Coordinate[][] {
+export function rotate(shape: Shape, rotation: Rotation): Shape {
     if (rotation == 0)
         return shape;
     if (rotation == 90)
@@ -41,7 +43,7 @@ export function rotate(shape: Coordinate[][], rotation: number): Coordinate[][] 
     throw new Error(`Invalid rotation: ${rotation}`);
 }
 
-export type Strokes = Coordinate[][];
+export type Strokes = Shape;
 
 export const placeholder: Strokes = [
     [[5, 1]],
