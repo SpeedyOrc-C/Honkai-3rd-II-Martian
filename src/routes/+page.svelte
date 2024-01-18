@@ -1,20 +1,13 @@
 <script lang="ts">
     import "../global.sass";
-    import {Tones} from "$lib/Tones";
     import MartianSubtitle from "./MartianSubtitle.svelte";
     import type {Martian} from "$lib/Martian";
     import {martianP} from "$lib/Parser";
     import {onMount} from "svelte";
     import CanvasMartianLetter from "$lib/CanvasMartianLetter.svelte";
     import CanvasMartian from "$lib/CanvasMartian.svelte";
-    import {MartianSyllable} from "$lib/Martian";
+    import Alphabet from "./Alphabet.svelte";
 
-    const letterGroups = [
-        ["A", "O", "E", "I", "U", "Y", "W"],
-        ["B", "P", "M", "F", "D", "T", "N", "L"],
-        ["G", "K", "H", "J", "Q", "X"],
-        ["Z", "C", "S", "R", "ZH", "CH", "SH"],
-    ];
     const defaultPinyin = "di4 qiu2 ni3 hao3";
 
     let pinyinToBeConverted = defaultPinyin;
@@ -31,7 +24,7 @@
         const [[m1,], [m2,], [m3,], [m4,]] = await Promise.all([
             martianP("wen2 zi4 zhuan3 huan4"),
             martianP("shu1 xie3 fang1 fa3"),
-            martianP("zi4 mu3 biao3"),
+            martianP("zi4 mu3 yu3 shu4 zi4"),
             martianP(defaultPinyin),
         ]);
         martianTitleConversion = m1;
@@ -114,118 +107,52 @@
     <br><br><br>
 
     <MartianSubtitle martian={martianTitleAlphabet}>
-        字母表
+        字母与数字
     </MartianSubtitle>
 
-    <div id="alphabet" class="scroll-x">
-        {#each letterGroups as group}
-            <div class="column">
-                {#each group as letter}
-                    <div class="row">
-
-                        <div class="latin" class:long={letter.length > 1}>
-                            {letter}
-                        </div>
-
-                        <div class="tones">
-                            {#each Tones as tone}
-                            <div class="consonant">
-                                {#if letter.length === 1}
-                                    <CanvasMartianLetter {letter} color="#eee" {tone} strokeWeight={0.1} />
-                                {:else}
-                                    <CanvasMartian sentence={[new MartianSyllable(letter, tone)]} color="#eee" strokeWeight={0.05} />
-                                {/if}
-                            </div>
-                            {/each}
-                        </div>
-
-                    </div>
-                {/each}
-            </div>
-        {/each}
-    </div>
+    <Alphabet />
 
     <div style="height: 30vh"/>
 </div>
 
-<style lang="sass">
-    @import "../global"
+<style lang="scss">
+    @import "../global";
 
-    #wrapper
-        width: 100%
+    #wrapper {
+        width: 100%;
+    }
 
-    .text
-        width: 100%
-        max-width: 45rem
-        margin: 0 auto
-        padding: 1rem 1.3rem
+    .text {
+        width: 100%;
+        max-width: 45rem;
+        margin: 0 auto;
+        padding: 1rem 1.3rem;
 
-        background-color: #fff1
-        color: #eee
-        font-size: 1.2rem
-        font-family: sans-serif
+        background-color: #fff1;
+        color: #eee;
+        font-size: 1.2rem;
+        font-family: sans-serif;
+    }
 
-    #pinyin-input
-        display: block
-        width: 100%
-        max-width: 50rem
+    #pinyin-input {
+        display: block;
+        width: 100%;
+        max-width: 50rem;
 
-        margin: 0 auto
-        padding: 0.5rem 0.8rem
+        margin: 0 auto;
+        padding: 0.5rem 0.8rem;
 
-        font-size: 2rem
+        font-size: 2rem;
 
-        background: #8f4014
-        &.valid
-            background: unset
+        background: #8f4014;
+        &.valid {
+            background: unset;
+        }
+    }
 
-    #output
-        margin: 0 auto
-        width: fit-content
-        max-width: 100%
-
-    #alphabet
-        box-sizing: content-box
-        *
-            box-sizing: content-box
-
-        display: flex
-        align-items: flex-start
-
-        max-width: 100%
-        width: fit-content
-        margin: 0 auto
-
-        .column
-            margin: 0 0.25rem
-
-        .row
-            display: flex
-            align-items: center
-
-            padding: 0.5rem 0.5rem 0.5rem 0
-            border: 2px solid #fff2
-            margin: 0.5rem 0
-
-        .latin
-            width: 3rem
-            text-align: center
-
-            color: #eee
-            font-size: 2rem
-            font-family: Georgia, serif
-
-            &.long
-                font-size: 1.5rem
-
-        .tones
-            display: flex
-            width: 15rem
-            justify-content: space-between
-
-            .consonant
-                height: 3rem
-                width: 3rem
-                position: relative
-                overflow: visible
+    #output {
+        margin: 0 auto;
+        width: fit-content;
+        max-width: 100%;
+    }
 </style>
