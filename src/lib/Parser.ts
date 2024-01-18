@@ -43,7 +43,7 @@ export async function martianSyllableP(input: string): Promise<[MartianSyllable,
     const syllable = syllableChars
         .join("")
         .toUpperCase()
-        .replace("V", "Ü");
+        .replaceAll("V", "Ü");
     return [new MartianSyllable(syllable, tone), tail2];
 }
 
