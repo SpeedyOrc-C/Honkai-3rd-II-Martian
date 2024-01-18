@@ -1,6 +1,8 @@
 import {martianP} from "$lib/Parser";
-import {MartianGlyphShapes, MartianLetterShapes, placeholder, rotate, rotationFromTone} from "$lib/MartianShapes";
+import {MartianGlyphShapes, MartianLetterShapes, placeholder, rotate, type Rotation, rotationFromTone}
+    from "$lib/MartianShapes";
 import {type Martian, MartianGlyph, MartianSpace, MartianSyllable} from "$lib/Martian";
+import {Parser} from "crazy-parser";
 
 const SENTENCE_ROW_NUMBER = 9;
 const LETTER_ROW_NUMBER = 5;
@@ -89,7 +91,7 @@ export default class MartianRenderer
     async drawSentence(sentence: string | Martian)
     {
         if (typeof sentence == "string") {
-            const [martian,] = await martianP(sentence);
+            const martian = await Parser.strict(martianP)(sentence);
             await this.drawSentenceFromMartian(martian);
         } else {
             await this.drawSentenceFromMartian(sentence);

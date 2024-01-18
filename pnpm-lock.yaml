@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   crazy-parser:
-    specifier: ^0.4.5
-    version: 0.4.5
+    specifier: ^0.5.0
+    version: 0.5.0
   sass:
     specifier: ^1.68.0
     version: 1.68.0
@@ -592,8 +592,8 @@ packages:
     engines: {node: '>= 0.6'}
     dev: true
 
-  /crazy-parser@0.4.5:
-    resolution: {integrity: sha512-yMtgFsqq04j5PmkM2dRWbJm0orEPbXxrHoYDUpZeJ0knHl2nemIkNt7WtsoKvsaLMC1tmbAniUWFQVnlT4Bojw==}
+  /crazy-parser@0.5.0:
+    resolution: {integrity: sha512-fdDuED3LjJvQkefAt2vKrtFNq3CF4H69ZmKswT17GF8LohfSfRAIpSsQd7hAWq4XwPGZ77B5H7LyOJaR01d3OQ==}
     dev: false
 
   /css-tree@2.3.1:

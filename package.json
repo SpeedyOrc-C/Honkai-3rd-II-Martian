@@ -20,7 +20,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"crazy-parser": "^0.4.5",
+		"crazy-parser": "^0.5.0",
 		"sass": "^1.68.0",
 		"scss": "^0.2.4"
 	}
