@@ -12,10 +12,10 @@
 </div>
 
 <style lang="sass">
-    @import "../global"
-
     .martian-subtitle
-        @extend %no-sel
+        -moz-user-select: none
+        -webkit-user-select: none
+        user-select: none
 
         display: flex
 

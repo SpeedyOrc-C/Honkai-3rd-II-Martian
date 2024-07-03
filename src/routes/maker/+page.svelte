@@ -27,6 +27,7 @@
             image = canvas.toDataURL();
         } catch (e) {
             alert("拼音输入格式错误。");
+            console.error(e)
         }
     }
 
@@ -49,40 +50,41 @@
 </svelte:head>
 
 <form>
-    <table>
-        <tr>
-            <td><label for="pinyin">拼音</label></td>
-            <td><input type="text" id="pinyin" bind:value={pinyin} bind:this={pinyinInput}
-                       placeholder="di4 qiu2 ni3 hao3" required autocomplete="off"></td>
-        </tr>
-        <tr>
-            <td><label for="foreground-color">前景色</label></td>
-            <td><input type="color" id="foreground-color" bind:value={foregroundColor}></td>
-        </tr>
-        <tr>
-            <td><label for="background-color">背景色</label></td>
-            <td><input type="color" id="background-color" bind:value={backgroundColor}
-                       disabled={transparentBackground}></td>
-        </tr>
-        <tr>
-            <td><label for="transparent-background">透明背景</label></td>
-            <td><input type="checkbox" id="transparent-background" bind:checked={transparentBackground}></td>
-        </tr>
-        <tr>
-            <td><label for="stroke-weight-percentage">笔画粗细</label></td>
-            <td><input type="number" id="stroke-weight-percentage" bind:value={weightPercentage}><br>
-                <input type="range" id="stroke-weight-percentage-range" bind:value={weightPercentage}
-                       min="1" max="20" step="1">
-            </td>
-        </tr>
-        <tr>
-            <td><label for="image-height">图像高度</label></td>
-            <td><input type="number" id="image-height" bind:value={imageHeight} required><br>
-                <input type="range" id="image-height-range" bind:value={imageHeight}
-                       min="100" max="1000" step="100">
-            </td>
-        </tr>
-    </table>
+    <div>
+        <label for="pinyin">拼音</label>
+        <input type="text" id="pinyin" bind:value={pinyin} bind:this={pinyinInput}
+                   placeholder="di4 qiu2 ni3 hao3" required autocomplete="off">
+    </div>
+
+    <div>
+        <label for="foreground-color">前景色</label>
+        <input type="color" id="foreground-color" bind:value={foregroundColor}>
+    </div>
+
+    <div>
+        <label for="background-color">背景色</label>
+        <input type="color" id="background-color" bind:value={backgroundColor}
+                   disabled={transparentBackground}>
+    </div>
+
+    <div>
+        <label for="transparent-background">透明背景</label>
+        <input type="checkbox" id="transparent-background" bind:checked={transparentBackground}>
+    </div>
+
+    <div>
+        <label for="stroke-weight-percentage">笔画粗细</label>
+        <input type="number" id="stroke-weight-percentage" bind:value={weightPercentage}>
+            <input type="range" id="stroke-weight-percentage-range" bind:value={weightPercentage}
+                   min="1" max="20" step="1">
+    </div>
+
+    <div>
+        <label for="image-height">图像高度</label>
+        <input type="number" id="image-height" bind:value={imageHeight} required>
+        <input type="range" id="image-height-range" bind:value={imageHeight}
+               min="100" max="1000" step="100">
+    </div>
 
     <button on:click={render} type="submit" disabled={pinyin.length === 0}>生成</button>
     <button on:click={copyToClipboard} disabled={image == null}>复制到剪贴板</button>
@@ -100,12 +102,28 @@
 
 <canvas bind:this={canvas} />
 
-<style>
-    canvas {
-        display: none;
-    }
+<style lang="sass">
+    canvas
+        display: none
 
-    img {
-        height: 10rem;
-    }
+    img
+        height: 10rem
+
+    form > div
+        margin-bottom: 1rem
+
+    label
+        margin-bottom: 0.5rem
+        display: block
+        color: #eee
+
+    input[type="range"]
+        margin-top: 0.5rem
+
+    input
+        display: block
+        font-size: 1.5rem
+
+    img
+        outline: 4px dashed #fff2
 </style>

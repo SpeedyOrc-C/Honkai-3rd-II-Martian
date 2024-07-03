@@ -1,5 +1,4 @@
 <script lang="ts">
-    import "../global.sass";
     import MartianSubtitle from "./MartianSubtitle.svelte";
     import type {Martian} from "$lib/Martian";
     import {martianP} from "$lib/Parser";
@@ -77,6 +76,12 @@
 
     <br><br><br>
 
+    <div class="text">
+        如果您需要进一步调整生成文字的颜色以及粗细，请移步至<a href="./maker">生成器</a>。
+    </div>
+
+    <br><br><br>
+
     <MartianSubtitle martian={martianTitleWriting}>
         书写方法
     </MartianSubtitle>
@@ -116,8 +121,6 @@
 </div>
 
 <style lang="scss">
-    @import "../global";
-
     #wrapper {
         width: 100%;
     }
