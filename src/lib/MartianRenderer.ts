@@ -98,6 +98,11 @@ export default class MartianRenderer
         }
     }
 
+    clear()
+    {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
     private countColumnNumber(martian: Martian): number
     {
         let width = 0;
