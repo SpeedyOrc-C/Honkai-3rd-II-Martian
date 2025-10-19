@@ -1,12 +1,8 @@
 <script lang="ts">
-	interface Props {
-		children?: import('svelte').Snippet;
-	}
-
-	let { children }: Props = $props();
+	const { children } = $props()
 </script>
 
-{@render children?.()}
+{@render children()}
 
 <style lang="sass">
     :global(*)

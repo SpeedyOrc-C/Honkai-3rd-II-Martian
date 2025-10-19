@@ -2,8 +2,8 @@
     import MartianRenderer from "$lib/MartianRenderer";
     import {onMount} from "svelte";
 
-    let canvas: HTMLCanvasElement = $state();
-    let pinyinInput: HTMLInputElement = $state();
+    let canvas: HTMLCanvasElement
+    let pinyinInput: HTMLInputElement
 
     let pinyin = $state("");
     let foregroundColor = $state("#000000");
