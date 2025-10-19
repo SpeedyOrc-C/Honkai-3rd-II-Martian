@@ -1,25 +1,30 @@
-<!-- @migration-task Error while migrating Svelte code: Can't migrate code with afterUpdate. Please migrate by hand. -->
 <script lang="ts">
     import MartianRenderer from "$lib/MartianRenderer";
-    import {afterUpdate} from "svelte";
     import {Tone} from "$lib/Tone";
     import {rotationFromTone} from "$lib/MartianShapes";
 
-    export let letter: string = "A";
-    export let tone: Tone = Tone.Flat;
-    export let color = "black";
-    export let strokeWeight = 0.05;
+    const {
+        letter = "A",
+        tone = Tone.Flat,
+        color = "black",
+        strokeWeight = 0.05
+    }: {
+        letter: string;
+        tone: Tone;
+        color: string;
+        strokeWeight: number;
+    } = $props();
 
     let canvas: HTMLCanvasElement;
     let renderer: MartianRenderer;
 
-    afterUpdate(() => {
+    $effect(() => {
         renderer = new MartianRenderer(canvas, color, strokeWeight);
         renderer.drawLetter(letter, rotationFromTone(tone));
     });
 </script>
 
-<canvas bind:this={canvas} />
+<canvas bind:this={canvas}></canvas>
 
 <style>
     canvas {

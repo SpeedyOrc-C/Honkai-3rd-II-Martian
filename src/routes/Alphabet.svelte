@@ -20,40 +20,44 @@
 <div id="alphabet">
     {#each letterGroups as group}
     <table>
-        {#each group as letter}
-        <tr>
-            <td class="latin">{letter}</td>
-            {#each Tones as tone}
-            <td class="martian">
+        <tbody>
+            {#each group as letter}
+            <tr>
+                <td class="latin">{letter}</td>
+                {#each Tones as tone}
+                <td class="martian">
 
-                <div>
-                    {#if letter.length === 1}
-                        <CanvasMartianLetter {letter} color="#eee" {tone} strokeWeight={0.1} />
-                    {:else}
-                        <CanvasMartian sentence={[new MartianSyllable(letter, tone)]}
-                                       color="#eee" strokeWeight={0.05} />
-                    {/if}
-                </div>
+                    <div>
+                        {#if letter.length === 1}
+                            <CanvasMartianLetter {letter} color="#eee" {tone} strokeWeight={0.1} />
+                        {:else}
+                            <CanvasMartian sentence={[new MartianSyllable(letter, tone)]}
+                                           color="#eee" strokeWeight={0.05} />
+                        {/if}
+                    </div>
 
-            </td>
+                </td>
+                {/each}
+            </tr>
             {/each}
-        </tr>
-        {/each}
+        </tbody>
     </table>
     {/each}
 
     {#each numberGroups as group}
     <table>
-        {#each group as number}
-        <tr>
-            <td class="number">{number}</td>
-            <td class="martian">
-                <div>
-                    <CanvasMartian sentence={number} color="#eee" strokeWeight={0.05} />
-                </div>
-            </td>
-        </tr>
-        {/each}
+        <tbody>
+            {#each group as number}
+            <tr>
+                <td class="number">{number}</td>
+                <td class="martian">
+                    <div>
+                        <CanvasMartian sentence={number} color="#eee" strokeWeight={0.05} />
+                    </div>
+                </td>
+            </tr>
+            {/each}
+        </tbody>
     </table>
     {/each}
 </div>
