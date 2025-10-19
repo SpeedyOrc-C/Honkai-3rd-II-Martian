@@ -2,12 +2,17 @@
     import type {Martian} from "$lib/Martian";
     import CanvasMartian from "$lib/CanvasMartian.svelte";
 
-    export let martian: Martian;
+    interface Props {
+        martian: Martian;
+        children?: import('svelte').Snippet;
+    }
+
+    let { martian, children }: Props = $props();
 </script>
 
 <div class="martian-subtitle">
-    <div class="text"><slot/></div>
-    <div style="width: 1rem"/>
+    <div class="text">{@render children?.()}</div>
+    <div style="width: 1rem"></div>
     <CanvasMartian sentence={martian} strokeWeight={0.08} color="#333" />
 </div>
 

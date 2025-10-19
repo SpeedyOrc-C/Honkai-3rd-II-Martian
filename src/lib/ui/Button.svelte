@@ -1,5 +1,10 @@
 <script lang="ts">
     import {createEventDispatcher} from "svelte";
+    interface Props {
+        children?: import('svelte').Snippet;
+    }
+
+    let { children }: Props = $props();
 
     const dispatch = createEventDispatcher();
 
@@ -8,10 +13,10 @@
     }
 </script>
 
-<div class="button" on:click={onclick} role="button" tabindex="0">
+<div class="button" {onclick} role="button" tabindex="0">
     <div class="inner">
         <div class="label">
-            <slot/>
+            {@render children?.()}
         </div>
     </div>
 </div>

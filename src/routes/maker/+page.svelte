@@ -2,16 +2,16 @@
     import MartianRenderer from "$lib/MartianRenderer";
     import {onMount} from "svelte";
 
-    let canvas: HTMLCanvasElement;
-    let pinyinInput: HTMLInputElement;
+    let canvas: HTMLCanvasElement = $state();
+    let pinyinInput: HTMLInputElement = $state();
 
-    let pinyin = "";
-    let foregroundColor = "#000000";
-    let backgroundColor = "#ffffff";
-    let transparentBackground = true;
-    let weightPercentage = 9;
-    let imageHeight = 500;
-    let image: string | null = null;
+    let pinyin = $state("");
+    let foregroundColor = $state("#000000");
+    let backgroundColor = $state("#ffffff");
+    let transparentBackground = $state(true);
+    let weightPercentage = $state(9);
+    let imageHeight = $state(500);
+    let image: string | null = $state(null);
 
     async function render()
     {
@@ -86,8 +86,8 @@
                min="100" max="1000" step="100">
     </div>
 
-    <button on:click={render} type="submit" disabled={pinyin.length === 0}>生成</button>
-    <button on:click={copyToClipboard} disabled={image == null}>复制到剪贴板</button>
+    <button onclick={render} type="submit" disabled={pinyin.length === 0}>生成</button>
+    <button onclick={copyToClipboard} disabled={image == null}>复制到剪贴板</button>
 </form>
 
 <br>
@@ -100,7 +100,7 @@
     </div>
 {/if}
 
-<canvas bind:this={canvas} />
+<canvas bind:this={canvas}></canvas>
 
 <style lang="sass">
     canvas

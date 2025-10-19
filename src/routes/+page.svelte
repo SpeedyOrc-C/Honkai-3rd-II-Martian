@@ -10,13 +10,13 @@
     const defaultPinyin = "di4 qiu2 ni3 hao3";
 
     let pinyinToBeConverted = defaultPinyin;
-    let inputPinyin = "";
-    let valid = true;
-    let martian: Martian = [];
+    let inputPinyin = $state("");
+    let valid = $state(true);
+    let martian: Martian = $state([]);
 
-    let martianTitleConversion: Martian = [];
-    let martianTitleWriting: Martian = [];
-    let martianTitleAlphabet: Martian = [];
+    let martianTitleConversion: Martian = $state([]);
+    let martianTitleWriting: Martian = $state([]);
+    let martianTitleAlphabet: Martian = $state([]);
     let martianDefaultPinyin: Martian = [];
 
     onMount(async () => {
@@ -51,14 +51,14 @@
 </svelte:head>
 
 <div id="wrapper">
-    <div style="height: 30vh"/>
+    <div style="height: 30vh"></div>
 
     <MartianSubtitle martian={martianTitleConversion}>
         文字转换
     </MartianSubtitle>
 
     <input id="pinyin-input" type="text" spellcheck="false" placeholder="{defaultPinyin}（输入拼音）"
-           bind:value={inputPinyin} on:keyup={updatePinyin} class:valid>
+           bind:value={inputPinyin} onkeyup={updatePinyin} class:valid>
 
     <br>
 
@@ -117,7 +117,7 @@
 
     <Alphabet />
 
-    <div style="height: 30vh"/>
+    <div style="height: 30vh"></div>
 </div>
 
 <style lang="scss">

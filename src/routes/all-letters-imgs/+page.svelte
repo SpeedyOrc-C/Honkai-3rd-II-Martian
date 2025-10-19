@@ -9,7 +9,7 @@
         'U', 'Ü', 'W', 'X', 'Y', 'Z',
     ]
 
-    let URLs: string[] = []
+    let URLs: string[] = $state([])
 
     onMount(async () =>
     {
