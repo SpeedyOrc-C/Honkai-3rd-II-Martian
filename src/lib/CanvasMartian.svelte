@@ -7,9 +7,9 @@
         color = "black",
         strokeWeight = 0.05
     }: {
-        sentence: string | Martian;
-        color: string;
-        strokeWeight: number;
+        sentence?: string | Martian;
+        color?: string;
+        strokeWeight?: number;
     } = $props();
 
     let canvas: HTMLCanvasElement;

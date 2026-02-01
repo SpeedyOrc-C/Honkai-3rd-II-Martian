@@ -10,7 +10,7 @@
         strokeWeight = 0.05
     }: {
         letter: string;
-        tone: Tone;
+        tone?: Tone;
         color: string;
         strokeWeight: number;
     } = $props();
